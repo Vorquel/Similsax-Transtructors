@@ -2,7 +2,7 @@
 {
   "modid": "SimilsaxTranstructors",
   "name": "Similsax Transtructors",
-  "description": "A mod by Vorquel",
+  "description": "Now you can place blocks *behind* the block you click on!",
   "version": "${modVersion}",
   "mcversion": "${mcVersion}",
   "url": "",
