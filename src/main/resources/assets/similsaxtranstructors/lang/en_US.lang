@@ -1,0 +1,4 @@
+# suppress inspection "UnusedProperty" for whole file
+
+item.similsaxTranstructorBasic.name=Basic Similsax Transtructor
+item.similsaxTranstructorAdvanced.name=Advanced Similsax Transtructor
