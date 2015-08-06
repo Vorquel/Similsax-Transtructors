@@ -29,7 +29,7 @@ public class SimilsaxTranstructors {
                 'x', Items.iron_ingot,
                 'o', Items.ender_pearl,
                 '/', Items.stick);
-        GameRegistry.addRecipe(new ItemStack(itemSimilsaxTranstructor, 1, 0x1000),
+        GameRegistry.addRecipe(new ItemStack(itemSimilsaxTranstructor, 1, itemSimilsaxTranstructor.advancedThreshold),
                 "o o",
                 "oxo",
                 " x ",

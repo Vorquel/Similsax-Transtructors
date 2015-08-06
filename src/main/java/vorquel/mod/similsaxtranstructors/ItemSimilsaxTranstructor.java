@@ -16,9 +16,9 @@ import java.util.List;
 public class ItemSimilsaxTranstructor extends Item {
 
     private IIcon[] icons = new IIcon[2];
-    private final int advancedThreshold = 0x1000;
-    private int basicUsages = 200;
-    private int advancedUsages = 1000;
+    public final int advancedThreshold = 0x1000;
+    private final int basicUsages = 200;
+    private final int advancedUsages = 1000;
 
     public ItemSimilsaxTranstructor(String unlocalizedName) {
         setCreativeTab(CreativeTabs.tabTools);
@@ -87,7 +87,7 @@ public class ItemSimilsaxTranstructor extends Item {
         if(block.isReplaceable(world, x, y, z)) return false;
         if(block.hasTileEntity(meta)) return false;
         ItemStack blockStack = new ItemStack(block, 1, block.damageDropped(meta));
-        if(!player.inventory.hasItemStack(blockStack)) return false;
+        if(!player.capabilities.isCreativeMode && !player.inventory.hasItemStack(blockStack)) return false;
 
         //if the middle way clicked, place on the opposite side
         float lo = .25f, hi = .75f;
@@ -154,15 +154,20 @@ public class ItemSimilsaxTranstructor extends Item {
                 default: return false;
             }
         } else if(otherBlock.isReplaceable(world, x, y, z)) {
-            int damage = stack.getItemDamage()+1;
-            if(damage == basicUsages || damage == advancedThreshold + advancedUsages)
-                player.destroyCurrentEquippedItem();
-            stack.setItemDamage(damage);
-            for(int i=0; i<player.inventory.mainInventory.length; ++i) {
-                ItemStack localStack = player.inventory.getStackInSlot(i);
-                if(localStack == null) continue;
-                if(localStack.isItemEqual(blockStack))
-                    player.inventory.decrStackSize(i, 1);
+            if(!world.canPlaceEntityOnSide(block, x, y, z, false, side, null, blockStack)) return false;
+            if(!player.capabilities.isCreativeMode) {
+                int damage = stack.getItemDamage()+1;
+                if(damage == basicUsages || damage == advancedThreshold + advancedUsages)
+                    player.destroyCurrentEquippedItem();
+                stack.setItemDamage(damage);
+                for(int i=0; i<player.inventory.mainInventory.length; ++i) {
+                    ItemStack localStack = player.inventory.getStackInSlot(i);
+                    if(localStack == null) continue;
+                    if(localStack.isItemEqual(blockStack)) {
+                        player.inventory.decrStackSize(i, 1);
+                        player.openContainer.detectAndSendChanges();
+                    }
+                }
             }
             world.setBlock(x, y, z, block, meta, 3);
             world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5,
