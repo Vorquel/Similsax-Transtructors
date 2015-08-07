@@ -17,10 +17,20 @@ public class ItemSimilsaxTranstructor extends Item {
 
     private IIcon[] icons = new IIcon[2];
     public final int advancedThreshold = 0x1000;
-    private final int basicUsages = 200;
-    private final int advancedUsages = 1000;
+    private final int basicUsages;
+    private final int advancedUsages;
+    private final int basicRange;
+    private final int advancedRange;
 
     public ItemSimilsaxTranstructor(String unlocalizedName) {
+        this(unlocalizedName, 200, 1000, 16, 64);
+    }
+
+    public ItemSimilsaxTranstructor(String unlocalizedName, int basicUsages, int advancedUsages, int basicRange, int advancedRange) {
+        this.basicUsages = basicUsages;
+        this.advancedUsages = advancedUsages;
+        this.basicRange = basicRange;
+        this.advancedRange = advancedRange;
         setCreativeTab(CreativeTabs.tabTools);
         setUnlocalizedName(unlocalizedName);
         setMaxStackSize(1);
@@ -136,7 +146,7 @@ public class ItemSimilsaxTranstructor extends Item {
     }
 
     private boolean tower(ItemStack stack, EntityPlayer player, Block block, int meta, World world, int x, int y, int z, int side, ItemStack blockStack) {
-        return tower(stack, player, block, meta, world, x, y, z, side, blockStack, stack.getItemDamage() < advancedThreshold ? 16 : 64);
+        return tower(stack, player, block, meta, world, x, y, z, side, blockStack, stack.getItemDamage() < advancedThreshold ? basicRange : advancedRange);
     }
 
     private boolean tower(ItemStack stack, EntityPlayer player, Block block, int meta, World world, int x, int y, int z, int side, ItemStack blockStack, int range) {
@@ -157,8 +167,10 @@ public class ItemSimilsaxTranstructor extends Item {
             if(!world.canPlaceEntityOnSide(block, x, y, z, false, side, null, blockStack)) return false;
             if(!player.capabilities.isCreativeMode) {
                 int damage = stack.getItemDamage()+1;
-                if(damage == basicUsages || damage == advancedThreshold + advancedUsages)
+                if(damage == basicUsages || damage == advancedThreshold + advancedUsages) {
                     player.destroyCurrentEquippedItem();
+                    world.playSoundAtEntity(player, "mob.endermen.portal", 1.0F, 1.0F);
+                }
                 stack.setItemDamage(damage);
                 for(int i=0; i<player.inventory.mainInventory.length; ++i) {
                     ItemStack localStack = player.inventory.getStackInSlot(i);
@@ -166,6 +178,7 @@ public class ItemSimilsaxTranstructor extends Item {
                     if(localStack.isItemEqual(blockStack)) {
                         player.inventory.decrStackSize(i, 1);
                         player.openContainer.detectAndSendChanges();
+                        break;
                     }
                 }
             }
