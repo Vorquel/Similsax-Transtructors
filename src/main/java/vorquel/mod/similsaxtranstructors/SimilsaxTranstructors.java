@@ -1,6 +1,7 @@
 package vorquel.mod.similsaxtranstructors;
 
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -13,6 +14,9 @@ public class SimilsaxTranstructors {
     public static final String MOD_ID = "SimilsaxTranstructors";
     public ItemSimilsaxTranstructor itemSimilsaxTranstructor = new ItemSimilsaxTranstructor("similsaxTranstructor");
 
+    @SidedProxy(clientSide = "vorquel.mod.similsaxtranstructors.ClientProxy", serverSide = "vorquel.mod.similsaxtranstructors.Proxy")
+    public static Proxy proxy;
+
     @Mod.EventHandler
     @SuppressWarnings("unused")
     public void preInit(FMLPreInitializationEvent event) {
@@ -22,6 +26,7 @@ public class SimilsaxTranstructors {
     @Mod.EventHandler
     @SuppressWarnings("unused")
     public void init(FMLInitializationEvent event) {
+        proxy.registerBlockOverlay();
         GameRegistry.addRecipe(new ItemStack(itemSimilsaxTranstructor, 1, 0),
                 "x x",
                 "xox",
