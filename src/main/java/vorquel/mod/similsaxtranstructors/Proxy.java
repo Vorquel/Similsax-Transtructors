@@ -1,5 +1,5 @@
 package vorquel.mod.similsaxtranstructors;
 
-public class Proxy {
+class Proxy {
     public void registerBlockOverlay() {}
 }

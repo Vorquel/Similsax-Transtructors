@@ -13,8 +13,8 @@ import org.lwjgl.opengl.GL11;
 
 public class BlockOverlay {
 
-    private ResourceLocation overlayLocation = new ResourceLocation(SimilsaxTranstructors.MOD_ID.toLowerCase(), "textures/overlay.png");
-    private Vec3[] vs = new Vec3[8];
+    private final ResourceLocation overlayLocation = new ResourceLocation(SimilsaxTranstructors.MOD_ID.toLowerCase(), "textures/overlay.png");
+    private final Vec3[] vs = new Vec3[8];
     {
         for(int i=0; i<8; ++i) {
             vs[i] = Vec3.createVectorHelper(0, 0, 0);
@@ -23,7 +23,7 @@ public class BlockOverlay {
             vs[i].zCoord = (i & 4) == 4 ? 1 : 0;
         }
     }
-    private float[][][] uvs = new float[7][4][];
+    private final float[][][] uvs = new float[7][4][];
     {
         float lo = 1/32f, hi = 15/32f;
         //arrow 1
@@ -62,7 +62,7 @@ public class BlockOverlay {
         uvs[6][2] = new float[]{.5f + hi,.5f + hi};
         uvs[6][3] = new float[]{.5f + hi,.5f + lo};
     }
-    private int[][] lookUps = new int[7][6];
+    private final int[][] lookUps = new int[7][6];
     {
         lookUps[0] = new int[]{2, 5, 1, 1, 4, 2};
         lookUps[1] = new int[]{0, 4, 3, 3, 5, 0};
@@ -74,7 +74,6 @@ public class BlockOverlay {
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void renderOverlay(DrawBlockHighlightEvent event) {
         if(shouldSkip(event))
             return;

@@ -15,24 +15,16 @@ import java.util.List;
 
 public class ItemSimilsaxTranstructor extends Item {
 
-    private IIcon[] icons = new IIcon[2];
+    private final IIcon[] icons = new IIcon[2];
     public static final int advancedThreshold = 0x1000;
-    private final int basicUsages;
-    private final int advancedUsages;
-    private final int basicRange;
-    private final int advancedRange;
+    int basicUses;
+    int advancedUses;
+    int basicRange;
+    int advancedRange;
 
-    public ItemSimilsaxTranstructor(String unlocalizedName) {
-        this(unlocalizedName, 200, 1000, 16, 64);
-    }
-
-    public ItemSimilsaxTranstructor(String unlocalizedName, int basicUsages, int advancedUsages, int basicRange, int advancedRange) {
-        this.basicUsages = basicUsages;
-        this.advancedUsages = advancedUsages;
-        this.basicRange = basicRange;
-        this.advancedRange = advancedRange;
+    public ItemSimilsaxTranstructor() {
         setCreativeTab(CreativeTabs.tabTools);
-        setUnlocalizedName(unlocalizedName);
+        setUnlocalizedName("similsaxTranstructor");
         setMaxStackSize(1);
     }
 
@@ -45,7 +37,6 @@ public class ItemSimilsaxTranstructor extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    @SuppressWarnings("unchecked")
     public void getSubItems(Item item, CreativeTabs tabs, List subItems) {
         subItems.add(new ItemStack(item, 1, 0));
         subItems.add(new ItemStack(item, 1, advancedThreshold));
@@ -74,10 +65,10 @@ public class ItemSimilsaxTranstructor extends Item {
     public double getDurabilityForDisplay(ItemStack stack) {
         int damage = stack.getItemDamage();
         if(damage < advancedThreshold)
-            return ((double) damage)/basicUsages;
+            return ((double) damage)/ basicUses;
         else {
             damage -= advancedThreshold;
-            return ((double) damage)/advancedUsages;
+            return ((double) damage)/ advancedUses;
         }
     }
 
@@ -123,7 +114,7 @@ public class ItemSimilsaxTranstructor extends Item {
             if(!world.canPlaceEntityOnSide(block, x, y, z, false, side, null, blockStack)) return false;
             if(!player.capabilities.isCreativeMode) {
                 int damage = stack.getItemDamage()+1;
-                if(damage == basicUsages || damage == advancedThreshold + advancedUsages) {
+                if(damage == basicUses || damage == advancedThreshold + advancedUses) {
                     player.destroyCurrentEquippedItem();
                     world.playSoundAtEntity(player, "mob.endermen.portal", 1.0F, 1.0F);
                 }
@@ -146,9 +137,9 @@ public class ItemSimilsaxTranstructor extends Item {
             return false;
     }
 
-    private static int[] sidesXY = new int[]{4, 5, 0, 1};
-    private static int[] sidesYZ = new int[]{0, 1, 2, 3};
-    private static int[] sidesZX = new int[]{2, 3, 4, 5};
+    private static final int[] sidesXY = new int[]{4, 5, 0, 1};
+    private static final int[] sidesYZ = new int[]{0, 1, 2, 3};
+    private static final int[] sidesZX = new int[]{2, 3, 4, 5};
 
     public static int getSide(int side, double xIn, double yIn, double zIn) {
         //if the middle was clicked, place on the opposite side

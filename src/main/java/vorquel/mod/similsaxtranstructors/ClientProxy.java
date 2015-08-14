@@ -2,7 +2,6 @@ package vorquel.mod.similsaxtranstructors;
 
 import net.minecraftforge.common.MinecraftForge;
 
-@SuppressWarnings("unused")
 public class ClientProxy extends Proxy {
 
     @Override
