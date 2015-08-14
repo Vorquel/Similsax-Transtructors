@@ -16,7 +16,7 @@ import java.util.List;
 public class ItemSimilsaxTranstructor extends Item {
 
     private IIcon[] icons = new IIcon[2];
-    public final int advancedThreshold = 0x1000;
+    public static final int advancedThreshold = 0x1000;
     private final int basicUsages;
     private final int advancedUsages;
     private final int basicRange;

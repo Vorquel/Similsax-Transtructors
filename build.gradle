@@ -21,7 +21,7 @@ sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
 
 def mcVersion = "1.7.10"
-def buildNumber = "1"
+def buildNumber = "2"
 
 def modVersion = mcVersion + "." + buildNumber
 group = "vorquel.mod.similsaxtranstructors" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
