@@ -1,6 +1,7 @@
 package vorquel.mod.similsaxtranstructors;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
@@ -88,7 +89,7 @@ public class BlockOverlay {
         else
             index = ItemSimilsaxTranstructor.getSide(m.field_178784_b.getIndex(), h.xCoord-mPos.getX(), h.yCoord-mPos.getY(), h.zCoord-mPos.getZ());
         Minecraft.getMinecraft().renderEngine.bindTexture(overlayLocation);
-        Vec3 v = Minecraft.getMinecraft().getRenderViewEntity().getPositionEyes(event.partialTicks);
+        Vec3 v = getViewerPosition(event.partialTicks);
         GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
         GL11.glPushMatrix();
         GL11.glTranslated(mPos.getX(), mPos.getY(), mPos.getZ());
@@ -114,8 +115,20 @@ public class BlockOverlay {
         GL11.glPopAttrib();
     }
 
+    private Vec3 getViewerPosition(float partialTicks) {
+        Entity viewer = Minecraft.getMinecraft().getRenderViewEntity();
+        double x = partial(partialTicks, viewer.prevPosX, viewer.posX);
+        double y = partial(partialTicks, viewer.prevPosY, viewer.posY);
+        double z = partial(partialTicks, viewer.prevPosZ, viewer.posZ);
+        return new Vec3(x, y, z);
+    }
+
+    private double partial(float partialTicks, double prevPos, double pos) {
+        return partialTicks == 1 ? pos : prevPos + partialTicks * (pos - prevPos);
+    }
+
     private boolean shouldSkip(DrawBlockHighlightEvent event) {
-        if(event.target.typeOfHit == MovingObjectPosition.MovingObjectType.MISS) return true;
+        if(event.target.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK) return true;
         if(event.currentItem == null) return true;
         return !(event.currentItem.getItem() instanceof ItemSimilsaxTranstructor);
     }
@@ -135,7 +148,7 @@ public class BlockOverlay {
         addVertex(uv[1][0], uv[1][1], c, 1d, i, hi, j, lo);
         addVertex(uv[2][0], uv[2][1], c, 1d, i, hi, j, hi);
         addVertex(uv[3][0], uv[3][1], c, 1d, i, lo, j, hi);
-        Tessellator.getInstance().getWorldRenderer().draw();
+        Tessellator.getInstance().draw();
     }
 
     private void addVertex(double u, double v, Object... args) {
