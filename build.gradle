@@ -20,7 +20,7 @@ apply plugin: 'forge'
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
 
-def mcVersion = "1.8"
+def mcVersion = "1.8.0"
 def buildNumber = "4"
 
 def modVersion = mcVersion + "." + buildNumber

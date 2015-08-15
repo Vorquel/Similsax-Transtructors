@@ -1,8 +1,6 @@
 package vorquel.mod.similsaxtranstructors;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
@@ -16,14 +14,9 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemSimilsaxTranstructor extends Item implements ItemMeshDefinition {
+public class ItemSimilsaxTranstructor extends Item {
 
     public static final int advancedThreshold = 0x1000;
-
-    private final ModelResourceLocation basicLocation =
-            new ModelResourceLocation("similsaxtranstructors:similsaxTranstructorBasic", "inventory");
-    private final ModelResourceLocation advancedLocation =
-            new ModelResourceLocation("similsaxtranstructors:similsaxTranstructorAdvanced", "inventory");
 
     int basicUses;
     int advancedUses;
@@ -43,16 +36,11 @@ public class ItemSimilsaxTranstructor extends Item implements ItemMeshDefinition
         subItems.add(new ItemStack(item, 1, advancedThreshold));
     }
 
-//    @Override
-//    @SideOnly(Side.CLIENT)
-//    public boolean isFull3D()
-//    {
-//        return true;
-//    }
-
     @Override
-    public ModelResourceLocation getModelLocation(ItemStack stack) {
-        return stack.getItemDamage() < advancedThreshold ? basicLocation : advancedLocation;
+    @SideOnly(Side.CLIENT)
+    public boolean isFull3D()
+    {
+        return true;
     }
 
     @Override
