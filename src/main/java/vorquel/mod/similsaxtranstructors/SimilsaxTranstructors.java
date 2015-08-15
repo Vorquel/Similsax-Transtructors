@@ -5,6 +5,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -44,5 +45,14 @@ public class SimilsaxTranstructors {
                 " x ",
                 'x', Items.diamond,
                 'o', Items.ender_pearl);
+    }
+
+    @Mod.EventHandler
+    public void serverStarting(FMLServerStartingEvent event) {
+        ItemSimilsaxTranstructor item = SimilsaxTranstructors.itemSimilsaxTranstructor;
+        item.basicUses = Config.basicUses;
+        item.advancedUses = Config.advancedUses;
+        item.basicRange = Config.basicRange;
+        item.advancedRange = Config.advancedRange;
     }
 }
