@@ -26,11 +26,11 @@ public class SimilsaxTranstructors {
         Config.init(event.getSuggestedConfigurationFile());
         ServerConfig.init();
         GameRegistry.registerItem(itemSimilsaxTranstructor, "similsaxTranstructor");
+        proxy.registerItemModel();
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        proxy.registerItemModel();
         if(showOverlay) proxy.registerBlockOverlay();
         FMLCommonHandler.instance().bus().register(new ServerConfig());
         GameRegistry.addRecipe(new ItemStack(itemSimilsaxTranstructor, 1, 0),

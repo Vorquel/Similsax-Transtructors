@@ -65,10 +65,12 @@ public class ServerConfig {
         @Override
         public IMessage onMessage(Message message, MessageContext ctx) {
             ItemSimilsaxTranstructor item = SimilsaxTranstructors.itemSimilsaxTranstructor;
-            item.basicUses = message.basicUses;
-            item.advancedUses = message.advancedUses;
-            item.basicRange = message.basicRange;
-            item.advancedRange = message.advancedRange;
+            synchronized(SimilsaxTranstructors.itemSimilsaxTranstructor) {
+                item.basicUses = message.basicUses;
+                item.advancedUses = message.advancedUses;
+                item.basicRange = message.basicRange;
+                item.advancedRange = message.advancedRange;
+            }
             return null;
         }
     }
