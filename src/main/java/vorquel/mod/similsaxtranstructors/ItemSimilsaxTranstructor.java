@@ -1,22 +1,30 @@
 package vorquel.mod.similsaxtranstructors;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemSimilsaxTranstructor extends Item {
+public class ItemSimilsaxTranstructor extends Item implements ItemMeshDefinition {
 
-    private final IIcon[] icons = new IIcon[2];
     public static final int advancedThreshold = 0x1000;
+
+    private final ModelResourceLocation basicLocation =
+            new ModelResourceLocation("similsaxtranstructors:similsaxTranstructorBasic", "inventory");
+    private final ModelResourceLocation advancedLocation =
+            new ModelResourceLocation("similsaxtranstructors:similsaxTranstructorAdvanced", "inventory");
+
     int basicUses;
     int advancedUses;
     int basicRange;
@@ -30,29 +38,21 @@ public class ItemSimilsaxTranstructor extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister iconRegister) {
-        icons[0] = iconRegister.registerIcon("similsaxtranstructors:similsaxTranstructorBasic");
-        icons[1] = iconRegister.registerIcon("similsaxtranstructors:similsaxTranstructorAdvanced");
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tabs, List subItems) {
         subItems.add(new ItemStack(item, 1, 0));
         subItems.add(new ItemStack(item, 1, advancedThreshold));
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean isFull3D()
-    {
-        return true;
-    }
+//    @Override
+//    @SideOnly(Side.CLIENT)
+//    public boolean isFull3D()
+//    {
+//        return true;
+//    }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamage(int damage) {
-        return damage < advancedThreshold ? icons[0] : icons[1];
+    public ModelResourceLocation getModelLocation(ItemStack stack) {
+        return stack.getItemDamage() < advancedThreshold ? basicLocation : advancedLocation;
     }
 
     @Override
@@ -78,40 +78,32 @@ public class ItemSimilsaxTranstructor extends Item {
     }
 
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float xIn, float yIn, float zIn) {
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
         if(world.isRemote) return true;
 
         //check if you can place a block
         if(!player.capabilities.allowEdit) return false;
-        Block block = world.getBlock(x, y, z);
-        int meta = world.getBlockMetadata(x, y, z);
-        if(block.isReplaceable(world, x, y, z)) return false;
-        if(block.hasTileEntity(meta)) return false;
-        ItemStack blockStack = new ItemStack(block, 1, block.damageDropped(meta));
+        IBlockState state = world.getBlockState(pos);
+        Block block = state.getBlock();
+        if(block.isReplaceable(world, pos)) return false;
+        if(block.hasTileEntity(state)) return false;
+        ItemStack blockStack = new ItemStack(block, 1, block.damageDropped(state));
         if(!player.capabilities.isCreativeMode && !player.inventory.hasItemStack(blockStack)) return false;
-        return tower(stack, player, block, meta, world, x, y, z, getSide(side, xIn, yIn, zIn), blockStack);
+        return tower(stack, player, block, state, world, pos, getSide(side.getIndex(), hitX, hitY, hitZ), blockStack);
     }
 
-    private boolean tower(ItemStack stack, EntityPlayer player, Block block, int meta, World world, int x, int y, int z, int side, ItemStack blockStack) {
-        return tower(stack, player, block, meta, world, x, y, z, side, blockStack, stack.getItemDamage() < advancedThreshold ? basicRange : advancedRange);
+    private boolean tower(ItemStack stack, EntityPlayer player, Block block, IBlockState state, World world, BlockPos pos, int side, ItemStack blockStack) {
+        return tower(stack, player, block, state, world, pos, EnumFacing.getFront(side).getOpposite(), blockStack, stack.getItemDamage() < advancedThreshold ? basicRange : advancedRange);
     }
 
-    private boolean tower(ItemStack stack, EntityPlayer player, Block block, int meta, World world, int x, int y, int z, int side, ItemStack blockStack, int range) {
+    private boolean tower(ItemStack stack, EntityPlayer player, Block block, IBlockState state, World world, BlockPos pos, EnumFacing side, ItemStack blockStack, int range) {
         if(range == 0) return false;
-        Block otherBlock = world.getBlock(x, y, z);
-        int otherMeta = world.getBlockMetadata(x, y, z);
-        if(block == otherBlock && meta == otherMeta) {
-            switch(side) {
-                case 0: return tower(stack, player, block, meta, world, x, y+1, z, side, blockStack, range-1);
-                case 1: return tower(stack, player, block, meta, world, x, y-1, z, side, blockStack, range-1);
-                case 2: return tower(stack, player, block, meta, world, x, y, z+1, side, blockStack, range-1);
-                case 3: return tower(stack, player, block, meta, world, x, y, z-1, side, blockStack, range-1);
-                case 4: return tower(stack, player, block, meta, world, x+1, y, z, side, blockStack, range-1);
-                case 5: return tower(stack, player, block, meta, world, x-1, y, z, side, blockStack, range-1);
-                default: return false;
-            }
-        } else if(otherBlock.isReplaceable(world, x, y, z)) {
-            if(!world.canPlaceEntityOnSide(block, x, y, z, false, side, null, blockStack)) return false;
+        IBlockState otherState = world.getBlockState(pos);
+        Block otherBlock = otherState.getBlock();
+        if(block == otherBlock && state.getProperties().equals(otherState.getProperties()))
+            return tower(stack, player, block, state, world, pos.offset(side), side, blockStack, range-1);
+        else if(otherBlock.isReplaceable(world, pos)) {
+            if(!world.canBlockBePlaced(block, pos, false, side.getOpposite(), null, blockStack)) return false;
             if(!player.capabilities.isCreativeMode) {
                 int damage = stack.getItemDamage()+1;
                 if(damage == basicUses || damage == advancedThreshold + advancedUses) {
@@ -129,9 +121,9 @@ public class ItemSimilsaxTranstructor extends Item {
                     }
                 }
             }
-            world.setBlock(x, y, z, block, meta, 3);
-            world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5,
-                    block.stepSound.func_150496_b(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
+            world.setBlockState(pos, state);
+            world.playSoundEffect(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                    block.stepSound.soundName, (block.stepSound.volume + 1.0F) / 2.0F, block.stepSound.frequency * 0.8F);
             return true;
         } else
             return false;

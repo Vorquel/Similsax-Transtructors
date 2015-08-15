@@ -1,11 +1,11 @@
 package vorquel.mod.similsaxtranstructors;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
@@ -29,6 +29,7 @@ public class SimilsaxTranstructors {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        proxy.registerItemModel();
         if(showOverlay) proxy.registerBlockOverlay();
         FMLCommonHandler.instance().bus().register(new ServerConfig());
         GameRegistry.addRecipe(new ItemStack(itemSimilsaxTranstructor, 1, 0),

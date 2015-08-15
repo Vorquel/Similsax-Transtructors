@@ -20,8 +20,8 @@ apply plugin: 'forge'
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
 
-def mcVersion = "1.7.10"
-def buildNumber = "2"
+def mcVersion = "1.8"
+def buildNumber = "3"
 
 def modVersion = mcVersion + "." + buildNumber
 group = "vorquel.mod.similsaxtranstructors" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -29,7 +29,7 @@ archivesBaseName = "SimilsaxTranstructors"
 version = modVersion
 
 minecraft {
-    version = "1.7.10-10.13.4.1448-1.7.10"
+    version = "1.8-11.14.3.1450"
 	replace("@MOD_VERSION@", modVersion)
 }
 

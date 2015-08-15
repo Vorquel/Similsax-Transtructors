@@ -1,6 +1,8 @@
 package vorquel.mod.similsaxtranstructors;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
@@ -17,10 +19,10 @@ public class BlockOverlay {
     private final Vec3[] vs = new Vec3[8];
     {
         for(int i=0; i<8; ++i) {
-            vs[i] = Vec3.createVectorHelper(0, 0, 0);
-            vs[i].xCoord = (i & 1) == 1 ? 1 : 0;
-            vs[i].yCoord = (i & 2) == 2 ? 1 : 0;
-            vs[i].zCoord = (i & 4) == 4 ? 1 : 0;
+            int x = (i & 1) == 1 ? 1 : 0;
+            int y = (i & 2) == 2 ? 1 : 0;
+            int z = (i & 4) == 4 ? 1 : 0;
+            vs[i] = new Vec3(x, y, z);
         }
     }
     private final float[][][] uvs = new float[7][4][];
@@ -78,17 +80,18 @@ public class BlockOverlay {
         if(shouldSkip(event))
             return;
         MovingObjectPosition m = event.target;
+        BlockPos mPos = m.func_178782_a();
         Vec3 h = m.hitVec;
         int index;
         if(isBadBlock(event))
             index = 6;
         else
-            index = ItemSimilsaxTranstructor.getSide(m.sideHit, h.xCoord-m.blockX, h.yCoord-m.blockY, h.zCoord-m.blockZ);
+            index = ItemSimilsaxTranstructor.getSide(m.field_178784_b.getIndex(), h.xCoord-mPos.getX(), h.yCoord-mPos.getY(), h.zCoord-mPos.getZ());
         Minecraft.getMinecraft().renderEngine.bindTexture(overlayLocation);
-        Vec3 v = Minecraft.getMinecraft().renderViewEntity.getPosition(event.partialTicks);
+        Vec3 v = Minecraft.getMinecraft().getRenderViewEntity().getPositionEyes(event.partialTicks);
         GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
         GL11.glPushMatrix();
-        GL11.glTranslated(m.blockX, m.blockY, m.blockZ);
+        GL11.glTranslated(mPos.getX(), mPos.getY(), mPos.getZ());
         GL11.glTranslated(-v.xCoord, -v.yCoord, -v.zCoord);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -118,23 +121,21 @@ public class BlockOverlay {
     }
 
     private boolean isBadBlock(DrawBlockHighlightEvent event) {
-        int x = event.target.blockX;
-        int y = event.target.blockY;
-        int z = event.target.blockZ;
+        BlockPos pos = event.target.func_178782_a();
         World world = event.player.worldObj;
-        Block block = world.getBlock(x, y, z);
-        int meta = world.getBlockMetadata(x, y, z);
-        return block.hasTileEntity(meta) || block.isReplaceable(world, x, y, z);
+        IBlockState state = world.getBlockState(pos);
+        Block block = state.getBlock();
+        return block.hasTileEntity(state) || block.isReplaceable(world, pos);
     }
 
     private void drawSide(int c, int i, int j, float[][] uv) {
         double lo = 1/16d, hi = 15/16d;
-        Tessellator.instance.startDrawingQuads();
+        Tessellator.getInstance().getWorldRenderer().startDrawingQuads();
         addVertex(uv[0][0], uv[0][1], c, 1d, i, lo, j, lo);
         addVertex(uv[1][0], uv[1][1], c, 1d, i, hi, j, lo);
         addVertex(uv[2][0], uv[2][1], c, 1d, i, hi, j, hi);
         addVertex(uv[3][0], uv[3][1], c, 1d, i, lo, j, hi);
-        Tessellator.instance.draw();
+        Tessellator.getInstance().getWorldRenderer().draw();
     }
 
     private void addVertex(double u, double v, Object... args) {
@@ -146,6 +147,6 @@ public class BlockOverlay {
             y += weight*vs[index].yCoord;
             z += weight*vs[index].zCoord;
         }
-        Tessellator.instance.addVertexWithUV(x, y, z, u, v);
+        Tessellator.getInstance().getWorldRenderer().addVertexWithUV(x, y, z, u, v);
     }
 }
