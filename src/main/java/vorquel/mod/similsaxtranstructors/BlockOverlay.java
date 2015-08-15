@@ -112,7 +112,7 @@ public class BlockOverlay {
     }
 
     private boolean shouldSkip(DrawBlockHighlightEvent event) {
-        if(event.target.typeOfHit == MovingObjectPosition.MovingObjectType.MISS) return true;
+        if(event.target.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK) return true;
         if(event.currentItem == null) return true;
         return !(event.currentItem.getItem() instanceof ItemSimilsaxTranstructor);
     }
