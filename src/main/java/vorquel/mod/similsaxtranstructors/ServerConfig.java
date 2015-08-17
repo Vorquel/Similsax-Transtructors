@@ -2,6 +2,7 @@ package vorquel.mod.similsaxtranstructors;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -18,7 +19,7 @@ public class ServerConfig {
     private static SimpleNetworkWrapper network;
 
     public static void init() {
-        network = NetworkRegistry.INSTANCE.newSimpleChannel(SimilsaxTranstructors.MOD_ID);
+        network = NetworkRegistry.INSTANCE.newSimpleChannel("Config");
         network.registerMessage(Handler.class, Message.class, 0, Side.CLIENT);
     }
 
