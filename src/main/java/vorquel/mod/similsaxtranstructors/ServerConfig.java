@@ -19,7 +19,7 @@ public class ServerConfig {
     private static SimpleNetworkWrapper network;
 
     public static void init() {
-        network = NetworkRegistry.INSTANCE.newSimpleChannel("Config");
+        network = NetworkRegistry.INSTANCE.newSimpleChannel("SmlsxTrnstrctrs");
         network.registerMessage(Handler.class, Message.class, 0, Side.CLIENT);
     }
 

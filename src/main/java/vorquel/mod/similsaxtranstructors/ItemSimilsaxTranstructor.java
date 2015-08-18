@@ -115,7 +115,7 @@ public class ItemSimilsaxTranstructor extends Item {
             }
             world.setBlockState(pos, state);
             world.playSoundEffect(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                    block.stepSound.soundName, (block.stepSound.volume + 1.0F) / 2.0F, block.stepSound.frequency * 0.8F);
+                    block.stepSound.getPlaceSound(), (block.stepSound.volume + 1.0F) / 2.0F, block.stepSound.frequency * 0.8F);
             return true;
         } else
             return false;
@@ -129,10 +129,13 @@ public class ItemSimilsaxTranstructor extends Item {
         //if the middle was clicked, place on the opposite side
         float lo = .25f, hi = .75f;
         int centeredSides = 0;
-        centeredSides += xIn>lo && xIn<hi ? 1 : 0;
-        centeredSides += yIn>lo && yIn<hi ? 1 : 0;
-        centeredSides += zIn>lo && zIn<hi ? 1 : 0;
-        if(centeredSides >= 2)
+        if(side != 0 && side != 1)
+            centeredSides += yIn>lo && yIn<hi ? 1 : 0;
+        if(side != 2 && side != 3)
+            centeredSides += zIn>lo && zIn<hi ? 1 : 0;
+        if(side != 4 && side != 5)
+            centeredSides += xIn>lo && xIn<hi ? 1 : 0;
+        if(centeredSides == 2)
             return side;
 
         //otherwise, place on the nearest side

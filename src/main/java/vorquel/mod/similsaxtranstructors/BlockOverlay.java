@@ -28,42 +28,41 @@ public class BlockOverlay {
     }
     private final float[][][] uvs = new float[7][4][];
     {
-        float lo = 1/32f, hi = 15/32f;
         //arrow 1
-        uvs[0][0] = new float[]{lo,lo};
-        uvs[0][1] = new float[]{lo,hi};
-        uvs[0][2] = new float[]{hi,hi};
-        uvs[0][3] = new float[]{hi,lo};
+        uvs[0][0] = new float[]{0,0};
+        uvs[0][1] = new float[]{0,.5f};
+        uvs[0][2] = new float[]{.5f,.5f};
+        uvs[0][3] = new float[]{.5f,0};
         //arrow 2
-        uvs[1][0] = new float[]{lo,hi};
-        uvs[1][1] = new float[]{hi,hi};
-        uvs[1][2] = new float[]{hi,lo};
-        uvs[1][3] = new float[]{lo,lo};
+        uvs[1][0] = new float[]{0,.5f};
+        uvs[1][1] = new float[]{.5f,.5f};
+        uvs[1][2] = new float[]{.5f,0};
+        uvs[1][3] = new float[]{0,0};
         //arrow 3
-        uvs[2][0] = new float[]{hi,hi};
-        uvs[2][1] = new float[]{hi,lo};
-        uvs[2][2] = new float[]{lo,lo};
-        uvs[2][3] = new float[]{lo,hi};
+        uvs[2][0] = new float[]{.5f,.5f};
+        uvs[2][1] = new float[]{.5f,0};
+        uvs[2][2] = new float[]{0,0};
+        uvs[2][3] = new float[]{0,.5f};
         //arrow 4
-        uvs[3][0] = new float[]{hi,lo};
-        uvs[3][1] = new float[]{lo,lo};
-        uvs[3][2] = new float[]{lo,hi};
-        uvs[3][3] = new float[]{hi,hi};
+        uvs[3][0] = new float[]{.5f,0};
+        uvs[3][1] = new float[]{0,0};
+        uvs[3][2] = new float[]{0,.5f};
+        uvs[3][3] = new float[]{.5f,.5f};
         //cross
-        uvs[4][0] = new float[]{.5f + lo,lo};
-        uvs[4][1] = new float[]{.5f + lo,hi};
-        uvs[4][2] = new float[]{.5f + hi,hi};
-        uvs[4][3] = new float[]{.5f + hi,lo};
+        uvs[4][0] = new float[]{.5f,0};
+        uvs[4][1] = new float[]{.5f,.5f};
+        uvs[4][2] = new float[]{1,.5f};
+        uvs[4][3] = new float[]{1,0};
         //bullseye
-        uvs[5][0] = new float[]{lo,.5f + lo};
-        uvs[5][1] = new float[]{lo,.5f + hi};
-        uvs[5][2] = new float[]{hi,.5f + hi};
-        uvs[5][3] = new float[]{hi,.5f + lo};
+        uvs[5][0] = new float[]{0,.5f};
+        uvs[5][1] = new float[]{0,1};
+        uvs[5][2] = new float[]{.5f,1};
+        uvs[5][3] = new float[]{.5f,.5f};
         //cancel
-        uvs[6][0] = new float[]{.5f + lo,.5f + lo};
-        uvs[6][1] = new float[]{.5f + lo,.5f + hi};
-        uvs[6][2] = new float[]{.5f + hi,.5f + hi};
-        uvs[6][3] = new float[]{.5f + hi,.5f + lo};
+        uvs[6][0] = new float[]{.5f,.5f};
+        uvs[6][1] = new float[]{.5f,1};
+        uvs[6][2] = new float[]{1,1};
+        uvs[6][3] = new float[]{1,.5f};
     }
     private final int[][] lookUps = new int[7][6];
     {
@@ -117,18 +116,6 @@ public class BlockOverlay {
         GL11.glPopAttrib();
     }
 
-    private Vec3 getViewerPosition(float partialTicks) {
-        Entity viewer = Minecraft.getMinecraft().getRenderViewEntity();
-        double x = partial(partialTicks, viewer.prevPosX, viewer.posX);
-        double y = partial(partialTicks, viewer.prevPosY, viewer.posY);
-        double z = partial(partialTicks, viewer.prevPosZ, viewer.posZ);
-        return new Vec3(x, y, z);
-    }
-
-    private double partial(float partialTicks, double prevPos, double pos) {
-        return partialTicks == 1 ? pos : prevPos + partialTicks * (pos - prevPos);
-    }
-
     private boolean shouldSkip(DrawBlockHighlightEvent event) {
         if(event.target.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK) return true;
         if(event.currentItem == null) return true;
@@ -143,25 +130,28 @@ public class BlockOverlay {
         return block.hasTileEntity(state) || block.isReplaceable(world, pos);
     }
 
+    private Vec3 getViewerPosition(float partialTicks) {
+        Entity viewer = Minecraft.getMinecraft().getRenderViewEntity();
+        double x = partial(partialTicks, viewer.prevPosX, viewer.posX);
+        double y = partial(partialTicks, viewer.prevPosY, viewer.posY);
+        double z = partial(partialTicks, viewer.prevPosZ, viewer.posZ);
+        return new Vec3(x, y, z);
+    }
+
+    private double partial(float partialTicks, double prevPos, double pos) {
+        return partialTicks == 1 ? pos : prevPos + partialTicks * (pos - prevPos);
+    }
+
     private void drawSide(int c, int i, int j, float[][] uv) {
-        double lo = 1/16d, hi = 15/16d;
         Tessellator.getInstance().getWorldRenderer().startDrawingQuads();
-        addVertex(uv[0][0], uv[0][1], c, 1d, i, lo, j, lo);
-        addVertex(uv[1][0], uv[1][1], c, 1d, i, hi, j, lo);
-        addVertex(uv[2][0], uv[2][1], c, 1d, i, hi, j, hi);
-        addVertex(uv[3][0], uv[3][1], c, 1d, i, lo, j, hi);
+        addVertex(uv[0][0], uv[0][1], c);
+        addVertex(uv[1][0], uv[1][1], c + i);
+        addVertex(uv[2][0], uv[2][1], c + i + j);
+        addVertex(uv[3][0], uv[3][1], c + j);
         Tessellator.getInstance().draw();
     }
 
-    private void addVertex(double u, double v, Object... args) {
-        double x=0, y=0, z=0;
-        for(int i=0; i<args.length; i+=2) {
-            int index = (Integer)args[i];
-            double weight = (Double)args[i+1];
-            x += weight*vs[index].xCoord;
-            y += weight*vs[index].yCoord;
-            z += weight*vs[index].zCoord;
-        }
-        Tessellator.getInstance().getWorldRenderer().addVertexWithUV(x, y, z, u, v);
+    private void addVertex(double u, double v, int i) {
+        Tessellator.getInstance().getWorldRenderer().addVertexWithUV(vs[i].xCoord, vs[i].yCoord, vs[i].zCoord, u, v);
     }
 }
