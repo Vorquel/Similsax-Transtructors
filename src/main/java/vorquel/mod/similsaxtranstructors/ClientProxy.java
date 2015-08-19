@@ -1,5 +1,6 @@
 package vorquel.mod.similsaxtranstructors;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -28,5 +29,10 @@ public class ClientProxy extends Proxy {
         });
         ModelBakery.addVariantName(SimilsaxTranstructors.itemSimilsaxTranstructor,
                 "similsaxtranstructors:similsaxTranstructorBasic", "similsaxtranstructors:similsaxTranstructorAdvanced");
+    }
+
+    @Override
+    public void addScheduledTask(Runnable runnable) {
+        Minecraft.getMinecraft().addScheduledTask(runnable);
     }
 }

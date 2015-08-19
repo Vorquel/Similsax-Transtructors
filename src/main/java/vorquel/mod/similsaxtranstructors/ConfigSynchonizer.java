@@ -14,7 +14,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 import static vorquel.mod.similsaxtranstructors.Config.*;
 
-public class ServerConfig {
+public class ConfigSynchonizer {
 
     private static SimpleNetworkWrapper network;
 
@@ -25,39 +25,31 @@ public class ServerConfig {
 
     @SubscribeEvent
     public void sendClientInfo(PlayerEvent.PlayerLoggedInEvent event) {
-        network.sendTo(new Message(basicUses, advancedUses, basicRange, advancedRange), (EntityPlayerMP) event.player);
+        network.sendTo(new Message(basicUses, advancedUses), (EntityPlayerMP) event.player);
     }
 
     public static class Message implements IMessage {
 
         public int basicUses;
         public int advancedUses;
-        public int basicRange;
-        public int advancedRange;
 
         public Message() {}
 
-        public Message(int basicUses, int advancedUses, int basicRange, int advancedRange) {
+        public Message(int basicUses, int advancedUses) {
             this.basicUses = basicUses;
             this.advancedUses = advancedUses;
-            this.basicRange = basicRange;
-            this.advancedRange = advancedRange;
         }
 
         @Override
         public void fromBytes(ByteBuf buf) {
             basicUses = buf.readInt();
             advancedUses = buf.readInt();
-            basicRange = buf.readInt();
-            advancedRange = buf.readInt();
         }
 
         @Override
         public void toBytes(ByteBuf buf) {
             buf.writeInt(basicUses);
             buf.writeInt(advancedUses);
-            buf.writeInt(basicRange);
-            buf.writeInt(advancedRange);
         }
     }
 
@@ -65,14 +57,27 @@ public class ServerConfig {
 
         @Override
         public IMessage onMessage(Message message, MessageContext ctx) {
-            ItemSimilsaxTranstructor item = SimilsaxTranstructors.itemSimilsaxTranstructor;
-            synchronized(SimilsaxTranstructors.itemSimilsaxTranstructor) {
-                item.basicUses = message.basicUses;
-                item.advancedUses = message.advancedUses;
-                item.basicRange = message.basicRange;
-                item.advancedRange = message.advancedRange;
-            }
+            SimilsaxTranstructors.proxy.addScheduledTask(
+                    new Task(message.basicUses, message.advancedUses));
             return null;
+        }
+    }
+
+    public static class Task implements Runnable {
+
+        private int bu, au;
+
+        public Task(int bu, int au) {
+            this.bu = bu;
+            this.au = au;
+        }
+
+        @Override
+        public void run() {
+            SimilsaxTranstructors.log.info("Syncing Client configs");
+            ItemSimilsaxTranstructor item = SimilsaxTranstructors.itemSimilsaxTranstructor;
+            item.basicUses = bu;
+            item.advancedUses = au;
         }
     }
 }

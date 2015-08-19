@@ -51,14 +51,12 @@ public class ItemSimilsaxTranstructor extends Item {
 
     @Override
     public double getDurabilityForDisplay(ItemStack stack) {
-        synchronized(this) {
-            int damage = stack.getItemDamage();
-            if(damage < advancedThreshold)
-                return ((double) damage)/ basicUses;
-            else {
-                damage -= advancedThreshold;
-                return ((double) damage)/ advancedUses;
-            }
+        int damage = stack.getItemDamage();
+        if(damage < advancedThreshold)
+            return ((double) damage)/ basicUses;
+        else {
+            damage -= advancedThreshold;
+            return ((double) damage)/ advancedUses;
         }
     }
 
@@ -79,9 +77,7 @@ public class ItemSimilsaxTranstructor extends Item {
         if(block.hasTileEntity(state)) return false;
         ItemStack blockStack = new ItemStack(block, 1, block.damageDropped(state));
         if(!player.capabilities.isCreativeMode && !player.inventory.hasItemStack(blockStack)) return false;
-        synchronized(this) {
-            return tower(stack, player, block, state, world, pos, getSide(side.getIndex(), hitX, hitY, hitZ), blockStack);
-        }
+        return tower(stack, player, block, state, world, pos, getSide(side.getIndex(), hitX, hitY, hitZ), blockStack);
     }
 
     private boolean tower(ItemStack stack, EntityPlayer player, Block block, IBlockState state, World world, BlockPos pos, int side, ItemStack blockStack) {
