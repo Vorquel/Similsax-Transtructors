@@ -75,9 +75,8 @@ public class ConfigSynchonizer {
         @Override
         public void run() {
             SimilsaxTranstructors.log.info("Syncing Client configs");
-            ItemSimilsaxTranstructor item = SimilsaxTranstructors.itemSimilsaxTranstructor;
-            item.basicUses = bu;
-            item.advancedUses = au;
+            SimilsaxTranstructors.itemBasic.setUses(bu);
+            SimilsaxTranstructors.itemAdvanced.setUses(au);
         }
     }
 }

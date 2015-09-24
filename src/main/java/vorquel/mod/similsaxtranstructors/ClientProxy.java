@@ -1,12 +1,11 @@
 package vorquel.mod.similsaxtranstructors;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
+
+import static vorquel.mod.similsaxtranstructors.SimilsaxTranstructors.*;
 
 public class ClientProxy extends Proxy {
 
@@ -17,18 +16,9 @@ public class ClientProxy extends Proxy {
 
     @Override
     public void registerItemModel() {
-        ModelLoader.setCustomMeshDefinition(SimilsaxTranstructors.itemSimilsaxTranstructor, new ItemMeshDefinition() {
-            private final ModelResourceLocation basicLocation =
-                    new ModelResourceLocation("similsaxtranstructors:similsaxTranstructorBasic", "inventory");
-            private final ModelResourceLocation advancedLocation =
-                    new ModelResourceLocation("similsaxtranstructors:similsaxTranstructorAdvanced", "inventory");
-            @Override
-            public ModelResourceLocation getModelLocation(ItemStack stack) {
-                return stack.getItemDamage() < ItemSimilsaxTranstructor.advancedThreshold ? basicLocation : advancedLocation;
-            }
-        });
-        ModelBakery.addVariantName(SimilsaxTranstructors.itemSimilsaxTranstructor,
-                "similsaxtranstructors:similsaxTranstructorBasic", "similsaxtranstructors:similsaxTranstructorAdvanced");
+        ModelLoader.setCustomModelResourceLocation(itemDummy, 0, new ModelResourceLocation(MOD_ID + ":similsaxTranstructor", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(itemBasic, 0, new ModelResourceLocation(MOD_ID + ":similsaxTranstructorBasic", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(itemAdvanced, 0, new ModelResourceLocation(MOD_ID + ":similsaxTranstructorAdvanced", "inventory"));
     }
 
     @Override

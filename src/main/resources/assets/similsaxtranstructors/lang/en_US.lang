@@ -1,4 +1,6 @@
-# suppress inspection "UnusedProperty" for whole file
 
+item.similsaxTranstructor.name=Wrapped Similsax Transtructor
 item.similsaxTranstructorBasic.name=Basic Similsax Transtructor
 item.similsaxTranstructorAdvanced.name=Advanced Similsax Transtructor
+
+item.similsaxTranstructor.tooltip=This item is wrapped. Craft to unwrap.

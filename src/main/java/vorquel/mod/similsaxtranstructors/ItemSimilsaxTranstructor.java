@@ -16,24 +16,16 @@ import java.util.List;
 
 public class ItemSimilsaxTranstructor extends Item {
 
-    public static final int advancedThreshold = 0x1000;
+    public int range = 0;
 
-    int basicUses;
-    int advancedUses;
-    int basicRange;
-    int advancedRange;
-
-    public ItemSimilsaxTranstructor() {
+    public ItemSimilsaxTranstructor(String name) {
         setCreativeTab(CreativeTabs.tabTools);
-        setUnlocalizedName("similsaxTranstructor");
+        setUnlocalizedName("similsaxTranstructor" + name);
         setMaxStackSize(1);
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tabs, List subItems) {
-        subItems.add(new ItemStack(item, 1, 0));
-        subItems.add(new ItemStack(item, 1, advancedThreshold));
+    public void setUses(int uses) {
+        setMaxDamage(uses - 1);
     }
 
     @Override
@@ -44,32 +36,11 @@ public class ItemSimilsaxTranstructor extends Item {
     }
 
     @Override
-    public boolean showDurabilityBar(ItemStack stack) {
-        int damage = stack.getItemDamage();
-        return damage != 0 && damage != advancedThreshold;
-    }
-
-    @Override
-    public double getDurabilityForDisplay(ItemStack stack) {
-        int damage = stack.getItemDamage();
-        if(damage < advancedThreshold)
-            return ((double) damage)/ basicUses;
-        else {
-            damage -= advancedThreshold;
-            return ((double) damage)/ advancedUses;
-        }
-    }
-
-    @Override
-    public String getUnlocalizedName(ItemStack stack) {
-        return super.getUnlocalizedName() + (stack.getItemDamage() < advancedThreshold ? "Basic" : "Advanced");
-    }
-
-    @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
         if(world.isRemote) return true;
 
         //check if you can place a block
+        if(getMaxDamage() == 0) return false;
         if(!player.capabilities.allowEdit) return false;
         IBlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
@@ -81,7 +52,7 @@ public class ItemSimilsaxTranstructor extends Item {
     }
 
     private boolean tower(ItemStack stack, EntityPlayer player, Block block, IBlockState state, World world, BlockPos pos, int side, ItemStack blockStack) {
-        return tower(stack, player, block, state, world, pos, EnumFacing.getFront(side).getOpposite(), blockStack, stack.getItemDamage() < advancedThreshold ? basicRange : advancedRange);
+        return tower(stack, player, block, state, world, pos, EnumFacing.getFront(side).getOpposite(), blockStack, range);
     }
 
     private boolean tower(ItemStack stack, EntityPlayer player, Block block, IBlockState state, World world, BlockPos pos, EnumFacing side, ItemStack blockStack, int range) {
@@ -92,13 +63,10 @@ public class ItemSimilsaxTranstructor extends Item {
             return tower(stack, player, block, state, world, pos.offset(side), side, blockStack, range-1);
         else if(otherBlock.isReplaceable(world, pos)) {
             if(!world.canBlockBePlaced(block, pos, false, side.getOpposite(), null, blockStack)) return false;
+            stack.damageItem(1, player);
+            if(stack.stackSize == 0)
+                world.playSoundAtEntity(player, "mob.endermen.portal", 1f, 1f);
             if(!player.capabilities.isCreativeMode) {
-                int damage = stack.getItemDamage()+1;
-                if(damage == basicUses || damage == advancedThreshold + advancedUses) {
-                    player.destroyCurrentEquippedItem();
-                    world.playSoundAtEntity(player, "mob.endermen.portal", 1.0F, 1.0F);
-                }
-                stack.setItemDamage(damage);
                 for(int i=0; i<player.inventory.mainInventory.length; ++i) {
                     ItemStack localStack = player.inventory.getStackInSlot(i);
                     if(localStack == null) continue;
