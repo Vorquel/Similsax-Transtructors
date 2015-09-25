@@ -15,8 +15,8 @@ class Config {
     public static void init(File file) {
         Configuration config = new Configuration(file);
         config.load();
-        basicUses = config.getInt("basicUses", "general", 200, 1, ItemSimilsaxTranstructor.advancedThreshold - 1, "How many times you can use the basic transtructor");
-        advancedUses = config.getInt("advancedUses", "general", 1000, 1, Short.MAX_VALUE - ItemSimilsaxTranstructor.advancedThreshold, "How many times you can use the advanced transtructor");
+        basicUses = config.getInt("basicUses", "general", 200, 1, Short.MAX_VALUE, "How many times you can use the basic transtructor");
+        advancedUses = config.getInt("advancedUses", "general", 1000, 1, Short.MAX_VALUE, "How many times you can use the advanced transtructor");
         basicRange = config.getInt("basicRange", "general", 16, 2, 128, "How far you can use the basic transtructor");
         advancedRange = config.getInt("advancedRange", "general", 64, 2, 128, "How far you can use the advanced transtructor");
         showOverlay = config.getBoolean("showOverlay", "general", true, "Should there be an overlay to show where");
