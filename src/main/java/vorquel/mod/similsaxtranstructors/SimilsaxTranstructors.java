@@ -98,7 +98,7 @@ public class SimilsaxTranstructors {
             }
 
             @Override
-            public ItemStack[] func_179532_b(InventoryCrafting p_179532_1_) {
+            public ItemStack[] getRemainingItems(InventoryCrafting p_179532_1_) {
                 return ForgeHooks.defaultRecipeGetRemainingItems(p_179532_1_);
             }
         });

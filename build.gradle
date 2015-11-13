@@ -1,21 +1,6 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-    }
+plugins {
+    id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
-
-apply plugin: 'forge'
 
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
@@ -29,8 +14,9 @@ archivesBaseName = "SimilsaxTranstructors"
 version = modVersion
 
 minecraft {
-    version = "1.8-11.14.3.1450"
+    version = "1.8-11.14.4.1563"
 	replace("@MOD_VERSION@", modVersion)
+    mappings = "stable_17"
 }
 
 processResources {
@@ -51,5 +37,3 @@ processResources {
         exclude 'mcmod.info'
     }
 }
-
-idea { module { inheritOutputDirs = true } }

@@ -80,13 +80,13 @@ public class BlockOverlay {
         if(shouldSkip(event))
             return;
         MovingObjectPosition m = event.target;
-        BlockPos mPos = m.func_178782_a();
+        BlockPos mPos = m.getBlockPos();
         Vec3 h = m.hitVec;
         int index;
         if(isBadBlock(event))
             index = 6;
         else
-            index = ItemSimilsaxTranstructor.getSide(m.field_178784_b.getIndex(), h.xCoord-mPos.getX(), h.yCoord-mPos.getY(), h.zCoord-mPos.getZ());
+            index = ItemSimilsaxTranstructor.getSide(m.sideHit.getIndex(), h.xCoord-mPos.getX(), h.yCoord-mPos.getY(), h.zCoord-mPos.getZ());
         Minecraft.getMinecraft().renderEngine.bindTexture(overlayLocation);
         Vec3 v = getViewerPosition(event.partialTicks);
         GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
@@ -123,7 +123,7 @@ public class BlockOverlay {
     }
 
     private boolean isBadBlock(DrawBlockHighlightEvent event) {
-        BlockPos pos = event.target.func_178782_a();
+        BlockPos pos = event.target.getBlockPos();
         World world = event.player.worldObj;
         IBlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
