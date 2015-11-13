@@ -21,7 +21,7 @@ sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
 
 def mcVersion = "1.7.10"
-def buildNumber = "13"
+def buildNumber = "15"
 
 def modVersion = mcVersion + "." + buildNumber
 group = "vorquel.mod.similsaxtranstructors" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -29,8 +29,9 @@ archivesBaseName = "SimilsaxTranstructors"
 version = modVersion
 
 minecraft {
-    version = "1.7.10-10.13.4.1448-1.7.10"
+    version = "1.7.10-10.13.4.1564-1.7.10"
 	replace("@MOD_VERSION@", modVersion)
+    mappings = "stable_12"
 }
 
 processResources {

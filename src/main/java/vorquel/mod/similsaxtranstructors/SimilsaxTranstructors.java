@@ -71,7 +71,7 @@ public class SimilsaxTranstructors {
                 for (int i = 0; i < inventory.getSizeInventory(); ++i) {
                     ItemStack stack = inventory.getStackInSlot(i);
                     if (stack == null || stack.getItem() != itemDummy) continue;
-                    int damage = stack.getItemDamage();
+                    int damage = stack.getCurrentDurability();
                     if (damage < 0x1000)
                         return new ItemStack(itemBasic, 1, damage);
                     else

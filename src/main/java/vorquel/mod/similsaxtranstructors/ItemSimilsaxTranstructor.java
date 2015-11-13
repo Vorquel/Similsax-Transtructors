@@ -21,7 +21,7 @@ public class ItemSimilsaxTranstructor extends Item {
     }
 
     public void setUses(int uses) {
-        setMaxDamage(uses - 1);
+        setMaxDurability(uses - 1);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ItemSimilsaxTranstructor extends Item {
         if(world.isRemote) return true;
 
         //check if you can place a block
-        if(getMaxDamage() == 0) return false;
+        if(getMaxDurability() == 0) return false;
         if(!player.capabilities.allowEdit) return false;
         Block block = world.getBlock(x, y, z);
         int meta = world.getBlockMetadata(x, y, z);
@@ -89,7 +89,7 @@ public class ItemSimilsaxTranstructor extends Item {
             }
             world.setBlock(x, y, z, block, meta, 3);
             world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5,
-                    block.stepSound.func_150496_b(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
+                    block.stepSound.getPlaceSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getFrequency() * 0.8F);
             return true;
         } else
             return false;
