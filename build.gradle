@@ -1,12 +1,19 @@
-plugins {
-    id "net.minecraftforge.gradle.forge" version "2.0.2"
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+    }
 }
+apply plugin: 'net.minecraftforge.gradle.forge'
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
-
-def mcVersion = "1.8.0"
-def buildNumber = "14"
+def mcVersion = "1.8.8"
+def buildNumber = "16"
 
 def modVersion = mcVersion + "." + buildNumber
 group = "vorquel.mod.similsaxtranstructors" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -14,9 +21,10 @@ archivesBaseName = "SimilsaxTranstructors"
 version = modVersion
 
 minecraft {
-    version = "1.8-11.14.4.1563"
-	replace("@MOD_VERSION@", modVersion)
-    mappings = "stable_17"
+    runDir = "run"
+    version = "1.8.8-11.14.4.1576-1.8.8" 
+    replace("@MOD_VERSION@", modVersion)
+    mappings = "snapshot_20151123"
 }
 
 processResources {
