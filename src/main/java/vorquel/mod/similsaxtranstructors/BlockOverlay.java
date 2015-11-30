@@ -144,7 +144,7 @@ public class BlockOverlay {
     }
 
     private void drawSide(int c, int i, int j, float[][] uv) {
-        Tessellator.getInstance().getWorldRenderer().func_181668_a(GL11.GL_QUADS, DefaultVertexFormats.field_181707_g);
+        Tessellator.getInstance().getWorldRenderer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         addVertex(uv[0][0], uv[0][1], c);
         addVertex(uv[1][0], uv[1][1], c + i);
         addVertex(uv[2][0], uv[2][1], c + i + j);
@@ -153,6 +153,6 @@ public class BlockOverlay {
     }
 
     private void addVertex(double u, double v, int i) {
-        Tessellator.getInstance().getWorldRenderer().func_181662_b(vs[i].xCoord, vs[i].yCoord, vs[i].zCoord).func_181673_a(u, v).func_181675_d();
+        Tessellator.getInstance().getWorldRenderer().pos(vs[i].xCoord, vs[i].yCoord, vs[i].zCoord).tex(u, v).endVertex();
     }
 }

@@ -22,9 +22,9 @@ version = modVersion
 
 minecraft {
     runDir = "run"
-    version = "1.8.8-11.14.4.1576-1.8.8" 
+    version = "1.8.8-11.15.0.1596-1.8.8" 
     replace("@MOD_VERSION@", modVersion)
-    mappings = "snapshot_20151123"
+    mappings = "snapshot_20151130"
 }
 
 processResources {
