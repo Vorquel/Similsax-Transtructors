@@ -21,9 +21,10 @@ archivesBaseName = "SimilsaxTranstructors"
 version = modVersion
 
 minecraft {
-     version = "1.8.9-11.15.0.1697"
+    version = "1.8.9-11.15.0.1697"
     runDir = "run"    
-mappings = "stable_20"
+    replace("@MOD_VERSION@", modVersion)
+	mappings = "stable_20"
 
 }
 
