@@ -12,7 +12,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-def mcVersion = "1.8.8"
+def mcVersion = "1.8.9"
 def buildNumber = "16"
 
 def modVersion = mcVersion + "." + buildNumber
@@ -21,10 +21,10 @@ archivesBaseName = "SimilsaxTranstructors"
 version = modVersion
 
 minecraft {
-    runDir = "run"
-    version = "1.8.8-11.15.0.1596-1.8.8" 
-    replace("@MOD_VERSION@", modVersion)
-    mappings = "snapshot_20151130"
+     version = "1.8.9-11.15.0.1697"
+    runDir = "run"    
+mappings = "stable_20"
+
 }
 
 processResources {
