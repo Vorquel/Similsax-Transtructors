@@ -6,7 +6,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import java.util.List;
 
 public class ItemDummy extends Item {
@@ -25,7 +24,7 @@ public class ItemDummy extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         tooltip.add(StatCollector.translateToLocal("item.similsaxTranstructor.tooltip"));
     }
 
