@@ -4,6 +4,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
@@ -36,9 +37,9 @@ public class SimilsaxTranstructors {
     public void preInit(FMLPreInitializationEvent event) {
         Config.init(event.getSuggestedConfigurationFile());
         ConfigSynchonizer.init();
-        GameRegistry.registerItem(itemDummy, "similsaxTranstructor");
-        GameRegistry.registerItem(itemBasic, "similsaxTranstructorBasic");
-        GameRegistry.registerItem(itemAdvanced, "similsaxTranstructorAdvanced");
+        GameRegistry.register(itemDummy, new ResourceLocation(MOD_ID, "similsaxTranstructor"));
+        GameRegistry.register(itemBasic, new ResourceLocation(MOD_ID, "similsaxTranstructorBasic"));
+        GameRegistry.register(itemAdvanced, new ResourceLocation(MOD_ID, "similsaxTranstructorAdvanced"));
         proxy.registerItemModel();
     }
 
@@ -50,15 +51,15 @@ public class SimilsaxTranstructors {
                 "x x",
                 "xox",
                 " / ",
-                'x', Items.iron_ingot,
-                'o', Items.ender_pearl,
-                '/', Items.stick);
+                'x', Items.IRON_INGOT,
+                'o', Items.ENDER_PEARL,
+                '/', Items.STICK);
         GameRegistry.addRecipe(new ItemStack(itemAdvanced),
                 "o o",
                 "oxo",
                 " x ",
-                'x', Items.diamond,
-                'o', Items.ender_pearl);
+                'x', Items.DIAMOND,
+                'o', Items.ENDER_PEARL);
         GameRegistry.addRecipe(new IRecipe() {
             @Override
             public boolean matches(InventoryCrafting inventory, World worldIn) {

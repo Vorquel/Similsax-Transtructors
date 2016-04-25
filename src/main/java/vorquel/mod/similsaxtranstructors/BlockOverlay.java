@@ -6,10 +6,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -18,13 +21,13 @@ import org.lwjgl.opengl.GL11;
 public class BlockOverlay {
 
     private final ResourceLocation overlayLocation = new ResourceLocation(SimilsaxTranstructors.MOD_ID.toLowerCase(), "textures/overlay.png");
-    private final Vec3[] vs = new Vec3[8];
+    private final Vec3d[] vs = new Vec3d[8];
     {
         for(int i=0; i<8; ++i) {
             int x = (i & 1) == 1 ? 1 : 0;
             int y = (i & 2) == 2 ? 1 : 0;
             int z = (i & 4) == 4 ? 1 : 0;
-            vs[i] = new Vec3(x, y, z);
+            vs[i] = new Vec3d(x, y, z);
         }
     }
     private final float[][][] uvs = new float[7][4][];
@@ -80,16 +83,16 @@ public class BlockOverlay {
     public void renderOverlay(DrawBlockHighlightEvent event) {
         if(shouldSkip(event))
             return;
-        MovingObjectPosition m = event.target;
+        RayTraceResult m = event.getTarget();
         BlockPos mPos = m.getBlockPos();
-        Vec3 h = m.hitVec;
+        Vec3d h = m.hitVec;
         int index;
         if(isBadBlock(event))
             index = 6;
         else
             index = ItemSimilsaxTranstructor.getSide(m.sideHit.getIndex(), h.xCoord-mPos.getX(), h.yCoord-mPos.getY(), h.zCoord-mPos.getZ());
         Minecraft.getMinecraft().renderEngine.bindTexture(overlayLocation);
-        Vec3 v = getViewerPosition(event.partialTicks);
+        Vec3d v = getViewerPosition(event.getPartialTicks());
         GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
         GL11.glPushMatrix();
         GL11.glTranslated(mPos.getX(), mPos.getY(), mPos.getZ());
@@ -118,25 +121,28 @@ public class BlockOverlay {
     }
 
     private boolean shouldSkip(DrawBlockHighlightEvent event) {
-        if(event.target.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK) return true;
-        if(event.currentItem == null) return true;
-        return !(event.currentItem.getItem() instanceof ItemSimilsaxTranstructor);
+        if(event.getTarget().typeOfHit != RayTraceResult.Type.BLOCK) return true;
+        ItemStack mainItemStack = event.getPlayer().getHeldItem(EnumHand.MAIN_HAND);
+        Item mainItem = mainItemStack == null ? null : mainItemStack.getItem();
+        ItemStack offItemStack = event.getPlayer().getHeldItem(EnumHand.OFF_HAND);
+        Item offItem = offItemStack == null ? null : offItemStack.getItem();
+        return !(mainItem instanceof ItemSimilsaxTranstructor || offItem instanceof ItemSimilsaxTranstructor);
     }
 
     private boolean isBadBlock(DrawBlockHighlightEvent event) {
-        BlockPos pos = event.target.getBlockPos();
-        World world = event.player.worldObj;
+        BlockPos pos = event.getTarget().getBlockPos();
+        World world = event.getPlayer().worldObj;
         IBlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
         return block.hasTileEntity(state) || block.isReplaceable(world, pos);
     }
 
-    private Vec3 getViewerPosition(float partialTicks) {
+    private Vec3d getViewerPosition(float partialTicks) {
         Entity viewer = Minecraft.getMinecraft().getRenderViewEntity();
         double x = partial(partialTicks, viewer.prevPosX, viewer.posX);
         double y = partial(partialTicks, viewer.prevPosY, viewer.posY);
         double z = partial(partialTicks, viewer.prevPosZ, viewer.posZ);
-        return new Vec3(x, y, z);
+        return new Vec3d(x, y, z);
     }
 
     private double partial(float partialTicks, double prevPos, double pos) {
@@ -144,7 +150,7 @@ public class BlockOverlay {
     }
 
     private void drawSide(int c, int i, int j, float[][] uv) {
-        Tessellator.getInstance().getWorldRenderer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        Tessellator.getInstance().getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         addVertex(uv[0][0], uv[0][1], c);
         addVertex(uv[1][0], uv[1][1], c + i);
         addVertex(uv[2][0], uv[2][1], c + i + j);
@@ -153,6 +159,6 @@ public class BlockOverlay {
     }
 
     private void addVertex(double u, double v, int i) {
-        Tessellator.getInstance().getWorldRenderer().pos(vs[i].xCoord, vs[i].yCoord, vs[i].zCoord).tex(u, v).endVertex();
+        Tessellator.getInstance().getBuffer().pos(vs[i].xCoord, vs[i].yCoord, vs[i].zCoord).tex(u, v).endVertex();
     }
 }

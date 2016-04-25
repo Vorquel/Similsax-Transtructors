@@ -3,7 +3,7 @@ package vorquel.mod.similsaxtranstructors;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -25,8 +25,8 @@ public class ItemDummy extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List tooltip, boolean advanced) {
-        tooltip.add(StatCollector.translateToLocal("item.similsaxTranstructor.tooltip"));
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+        tooltip.add(I18n.translateToLocal("item.similsaxTranstructor.tooltip"));
     }
 
     @Override
