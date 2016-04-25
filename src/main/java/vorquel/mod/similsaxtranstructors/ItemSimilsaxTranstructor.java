@@ -69,7 +69,8 @@ public class ItemSimilsaxTranstructor extends Item {
             if(!world.canBlockBePlaced(block, pos, false, side.getOpposite(), null, blockStack)) return PASS;
             stack.damageItem(1, player);
             if(stack.stackSize == 0)
-                world.playSound(player, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.PLAYERS, 1f, 1f);
+                world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT,
+                        SoundCategory.PLAYERS, 1f, 1f);
             if(!player.capabilities.isCreativeMode) {
                 for(int i=0; i<player.inventory.mainInventory.length; ++i) {
                     ItemStack localStack = player.inventory.getStackInSlot(i);
@@ -82,8 +83,8 @@ public class ItemSimilsaxTranstructor extends Item {
                 }
             }
             world.setBlockState(pos, state);
-            world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                    block.getSoundType().getPlaceSound(), SoundCategory.BLOCKS, (block.getSoundType().volume + 1.0F) / 2.0F, block.getSoundType().pitch * 0.8F, true);
+            world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, block.getSoundType().getPlaceSound(),
+                    SoundCategory.BLOCKS, (block.getSoundType().volume + 1.0F) / 2.0F, block.getSoundType().pitch * 0.8F);
             return SUCCESS;
         } else
             return PASS;
