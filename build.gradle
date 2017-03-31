@@ -12,7 +12,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-def mcVersion = "1.10.2"
+def mcVersion = "1.11.2"
 def buildNumber = "18"
 
 def modVersion = mcVersion + "." + buildNumber
@@ -22,9 +22,9 @@ version = modVersion
 
 minecraft {
     runDir = "run"
-    version = "1.10.2-12.18.1.2011" 
+    version = "1.11.2-13.20.0.2252" 
     replace("@MOD_VERSION@", modVersion)
-    mappings = "snapshot_20160725"
+    mappings = "snapshot_20161220"
 }
 
 processResources {
