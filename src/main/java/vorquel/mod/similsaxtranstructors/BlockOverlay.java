@@ -123,15 +123,15 @@ public class BlockOverlay {
     private boolean shouldSkip(DrawBlockHighlightEvent event) {
         if(event.getTarget().typeOfHit != RayTraceResult.Type.BLOCK) return true;
         ItemStack mainItemStack = event.getPlayer().getHeldItem(EnumHand.MAIN_HAND);
-        Item mainItem = mainItemStack == null ? null : mainItemStack.getItem();
+        Item mainItem = (mainItemStack.isEmpty()) ? null : mainItemStack.getItem();
         ItemStack offItemStack = event.getPlayer().getHeldItem(EnumHand.OFF_HAND);
-        Item offItem = offItemStack == null ? null : offItemStack.getItem();
+        Item offItem = (offItemStack.isEmpty()) ? null : offItemStack.getItem();
         return !(mainItem instanceof ItemSimilsaxTranstructor || offItem instanceof ItemSimilsaxTranstructor);
     }
 
     private boolean isBadBlock(DrawBlockHighlightEvent event) {
         BlockPos pos = event.getTarget().getBlockPos();
-        World world = event.getPlayer().worldObj;
+        World world = event.getPlayer().world;
         IBlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
         return block.hasTileEntity(state) || block.isReplaceable(world, pos);

@@ -4,11 +4,11 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -23,7 +23,7 @@ import static vorquel.mod.similsaxtranstructors.Config.showOverlay;
 @Mod(modid = SimilsaxTranstructors.MOD_ID, name = "Similsax Transtructors", version = "@MOD_VERSION@")
 public class SimilsaxTranstructors {
 
-    public static final String MOD_ID = "SimilsaxTranstructors";
+    public static final String MOD_ID = "similsaxtranstructors";
     public static final ItemDummy itemDummy = new ItemDummy("similsaxTranstructor");
     public static final ItemSimilsaxTranstructor itemBasic = new ItemSimilsaxTranstructor("Basic");
     public static final ItemSimilsaxTranstructor itemAdvanced = new ItemSimilsaxTranstructor("Advanced");
@@ -65,7 +65,7 @@ public class SimilsaxTranstructors {
             public boolean matches(InventoryCrafting inventory, World worldIn) {
                 int count = 0;
                 for(int i = 0; i < inventory.getSizeInventory(); ++i) {
-                    if(inventory.getStackInSlot(i) == null)
+                    if(inventory.getStackInSlot(i).isEmpty())
                         continue;
                     if(inventory.getStackInSlot(i).getItem() != itemDummy)
                         return false;
@@ -78,7 +78,7 @@ public class SimilsaxTranstructors {
             public ItemStack getCraftingResult(InventoryCrafting inventory) {
                 for(int i = 0; i < inventory.getSizeInventory(); ++i) {
                     ItemStack stack = inventory.getStackInSlot(i);
-                    if(stack == null || stack.getItem() != itemDummy) continue;
+                    if(stack.isEmpty() || stack.getItem() != itemDummy) continue;
                     int damage = stack.getItemDamage();
                     if(damage < 0x1000)
                         return new ItemStack(itemBasic, 1, damage);
@@ -95,11 +95,11 @@ public class SimilsaxTranstructors {
 
             @Override
             public ItemStack getRecipeOutput() {
-                return null;
+                return ItemStack.EMPTY;
             }
 
             @Override
-            public ItemStack[] getRemainingItems(InventoryCrafting p_179532_1_) {
+            public NonNullList<ItemStack> getRemainingItems(InventoryCrafting p_179532_1_) {
                 return ForgeHooks.defaultRecipeGetRemainingItems(p_179532_1_);
             }
         });

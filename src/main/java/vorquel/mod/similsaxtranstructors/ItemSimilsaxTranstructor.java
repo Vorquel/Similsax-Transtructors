@@ -25,7 +25,7 @@ public class ItemSimilsaxTranstructor extends Item {
 
     public ItemSimilsaxTranstructor(String name) {
         setCreativeTab(CreativeTabs.TOOLS);
-        setUnlocalizedName("similsaxTranstructor" + name);
+        setUnlocalizedName("similsaxtranstructor" + name);
         setMaxStackSize(1);
     }
 
@@ -41,7 +41,7 @@ public class ItemSimilsaxTranstructor extends Item {
     }
     
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if(world.isRemote) return SUCCESS;
         //check if you can place a block
         if(getMaxDamage() == 0) return PASS;
@@ -52,7 +52,7 @@ public class ItemSimilsaxTranstructor extends Item {
         if(block.hasTileEntity(state)) return PASS;
         ItemStack blockStack = new ItemStack(block, 1, block.damageDropped(state));
         if(!player.capabilities.isCreativeMode && !player.inventory.hasItemStack(blockStack)) return PASS;
-        return tower(stack, player, block, state, world, pos, getSide(facing.getIndex(), hitX, hitY, hitZ), blockStack);
+        return tower(player.getHeldItem(hand), player, block, state, world, pos, getSide(facing.getIndex(), hitX, hitY, hitZ), blockStack);
     }
 
     private EnumActionResult tower(ItemStack stack, EntityPlayer player, Block block, IBlockState state, World world, BlockPos pos, int side, ItemStack blockStack) {
@@ -66,15 +66,15 @@ public class ItemSimilsaxTranstructor extends Item {
         if(block == otherBlock && state.getProperties().equals(otherState.getProperties()))
             return tower(stack, player, block, state, world, pos.offset(side), side, blockStack, range-1);
         else if(otherBlock.isReplaceable(world, pos)) {
-            if(!world.canBlockBePlaced(block, pos, false, side.getOpposite(), null, blockStack)) return PASS;
+            if(!world.mayPlace(block, pos, false, side.getOpposite(), null)) return PASS;
             stack.damageItem(1, player);
-            if(stack.stackSize == 0)
+            if(stack.getCount() == 0)
                 world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT,
                         SoundCategory.PLAYERS, 1f, 1f);
             if(!player.capabilities.isCreativeMode) {
-                for(int i=0; i<player.inventory.mainInventory.length; ++i) {
+                for(int i=0; i<player.inventory.mainInventory.size(); ++i) {
                     ItemStack localStack = player.inventory.getStackInSlot(i);
-                    if(localStack == null) continue;
+                    if(localStack.isEmpty()) continue;
                     if(localStack.isItemEqual(blockStack)) {
                         player.inventory.decrStackSize(i, 1);
                         player.openContainer.detectAndSendChanges();

@@ -26,7 +26,7 @@ public class ItemDummy extends Item {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        tooltip.add(I18n.translateToLocal("item.similsaxTranstructor.tooltip"));
+        tooltip.add(I18n.translateToLocal("item.similsaxtranstructor.tooltip"));
     }
 
     @Override
